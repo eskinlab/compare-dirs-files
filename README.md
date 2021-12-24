@@ -1,7 +1,5 @@
 # tools-compare-dir-files
 
-[[_TOC_]]
-
 ### Description
 This script compare files in directories
 
