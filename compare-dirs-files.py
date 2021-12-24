@@ -10,12 +10,12 @@ RESULT_DIR = getenv('RESULT')
 
 def args_parser():
     parser = ArgumentParser(description='Compare dirs in one repository.')
-    parser.add_argument('--dir_from', '-f',
+    parser.add_argument('--dir_one', '-o',
                         type=str, required=True,
-                        help='Dir from')
-    parser.add_argument('--dir_to', '-t',
+                        help='Dir one')
+    parser.add_argument('--dir_two', '-t',
                         type=str, required=True,
-                        help='Dir to')
+                        help='Dir two')
     return parser.parse_args()
 
 
@@ -37,18 +37,18 @@ def rmdir(dir_path):
 
 class Compare:
 
-    def __init__(self, dir_from, dir_to):
-        print(f"[Info] Compare {dir_from} {dir_to}")
-        self.path_from = DIRS_PATH + dir_from + "/"
-        self.path_to = DIRS_PATH + dir_to + "/"
+    def __init__(self, dir_one, dir_two):
+        print(f"[Info] Compare {dir_one} {dir_two}")
+        self.path_one = DIRS_PATH + dir_one + "/"
+        self.path_two = DIRS_PATH + dir_two + "/"
         self.result_dir = RESULT_DIR
         self.new_files = list()
         self.deleted_files = list()
         rmdir(self.result_dir)
         makedirs(self.result_dir)
 
-    def _get_diffs(self, d, text_f, text_t):
-        diffs = [x for x in d.compare(text_f, text_t) if x[0] in ('+', '-')]
+    def _get_diffs(self, d, text1, text2):
+        diffs = [x for x in d.compare(text1, text2) if x[0] in ('+', '-')]
         diffs = list(map(lambda x: x+"\n" if "\n" not in x else x, diffs))
         return ''.join(diffs)
 
@@ -57,18 +57,18 @@ class Compare:
         d = Differ()
         for f_name in files:
             print("[Info] File: ", f_name)
-            file_from = self.path_from + f_name
-            file_to = self.path_to + f_name
+            file_one = self.path_one + f_name
+            file_two = self.path_two + f_name
             file_result = self.result_dir + "/" + f_name
-            text_from = str()
-            text_to = str()
-            if isfile(file_from):
-                with open(file_from, mode="r") as ff:
-                    text_from = ff.readlines()
-            if isfile(file_to):
-                with open(file_to, mode="r") as ft:
-                    text_to = ft.readlines()
-            diffs = self._get_diffs(d, text_from, text_to)
+            text_one = str()
+            text_two = str()
+            if isfile(file_one):
+                with open(file_one, mode="r") as fo:
+                    text_one = fo.readlines()
+            if isfile(file_two):
+                with open(file_two, mode="r") as ft:
+                    text_two = ft.readlines()
+            diffs = self._get_diffs(d, text_one, text_two)
             if diffs:
                 print("     There are changes")
                 with open(file_result, mode="w", encoding="utf-8") as fr:
@@ -76,10 +76,10 @@ class Compare:
             else:
                 print("     No changes")
 
-    def run(self, files_from: list, files_to: list) -> None:
-        self.general_files = set(files_from) & set(files_to)
-        self.new_files = set(files_to) - set(files_from)
-        self.deleted_files = set(files_from) - set(files_to)
+    def run(self, files_one: list, files_two: list) -> None:
+        self.general_files = set(files_one) & set(files_two)
+        self.new_files = set(files_two) - set(files_fonw)
+        self.deleted_files = set(files_one) - set(files_two)
         self._cmp_files(self.general_files)
         self._cmp_files(self.new_files)
         self._cmp_files(self.deleted_files)
@@ -91,14 +91,14 @@ class Compare:
         print(f"[Info] Result archive: {self.result_dir}")
 
 
-def main(branch_from, branch_to):
+def main(dir_one, dir_two):
     print("[Info] Start comparing process")
-    c = Compare(dir_from, dir_to)
-    files_from = get_files(c.dir_from)
-    files_to = get_files(c.dir_to)
-    c.run(files_from, files_to)
+    c = Compare(dir_one, dir_two)
+    files_one = get_files(c.dir_one)
+    files_two = get_files(c.dir_two)
+    c.run(files_onw, files_two)
 
 
 if __name__ == "__main__":
     args = args_parser()
-    main(args.dir_from, args.dir_to)
+    main(args.dir_one, args.dir_two)
