@@ -7,8 +7,8 @@ This script compare files in directories
 
 | Name | Description |Example|
 |---|---|---|
-|DIR_FROM|Path to dir one||
-|DIR_TO|Path to dir two||
+|DIR_ONE|Path to dir one||
+|DIR_TWO|Path to dir two||
 
 ### Result
 Result consisit all files (modified, unmodified, deleted, new).
