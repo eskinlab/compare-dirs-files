@@ -12,8 +12,8 @@ compare-branches:
     SCRIPT_PATH: ${CI_PROJECT_DIR}/compare-dirs-files/
     SCRIPT_NAME: compare-dirs-files.py
     RESULT: compare-dirs-files-${CI_JOB_ID}
-    PARAMETERS: --branch_from=${DIR_FROM} --branch_to=${DIR_TO}
+    PARAMETERS: --dir_one=${DIR_ONE} --dir_two=${DIR_TWO}
   stage: run
   rules:
-    - if: $DIR_FROM && $DIR_TO
+    - if: $DIR_ONE && $DIR_TWO
   extends: .run-script
