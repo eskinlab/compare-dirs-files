@@ -1,0 +1,19 @@
+.run-script:
+  before_script:
+    - pip install -r ${SCRIPT_PATH}requirements.txt
+  script:
+    - python ${SCRIPT_PATH}${SCRIPT_NAME} ${PARAMETERS}
+  artifacts:
+    paths:
+      - ${RESULT}
+
+compare-branches:
+  variables:
+    SCRIPT_PATH: ${CI_PROJECT_DIR}/compare-dirs-files/
+    SCRIPT_NAME: compare-dirs-files.py
+    RESULT: compare-dirs-files-${CI_JOB_ID}
+    PARAMETERS: --branch_from=${DIR_FROM} --branch_to=${DIR_TO}
+  stage: run
+  rules:
+    - if: $DIR_FROM && $DIR_TO
+  extends: .run-script
