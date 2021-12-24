@@ -1,0 +1,6 @@
+image: python:3.9.7
+stages:
+  - run
+
+include:
+  - local: /compare-dirs-files/compare-dirs-files.yml
